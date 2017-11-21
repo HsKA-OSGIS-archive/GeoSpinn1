@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Reading JSON</h2>
+
+<p id="demo"></p>
+
+<script>
+
+var text = '{ "name":"John", "birth":"1986-12-14", "city":"New York"}';
+
+var my_json = [{
+    "type": "buffer",
+	"id" : 1,
+    "parameters" :{
+		"l1": "layer1",
+		"radius": 10,
+		"units" : "kilometers"
+	}
+}, {
+    "type": "intersect",
+	"id" : 2,
+    "parameters" : {
+		"l1": 1,
+		"l2": "layer2"
+	}
+}, {
+    "type": "buffer",
+	"id" : 3,
+    "parameters" : {
+		"l1": 2,
+		"radius": 5,
+		"units" : "kilometers"
+	}
+}, {
+    "type": "buffer",
+	"id" : 4,
+    "parameters" : {
+		"l1": 2,
+		"radius": 15,
+		"units" : "kilometers"
+	}
+}, {
+    "type": "union",
+	"id" : 5,
+    "parameters" : {
+		"l1": "layer4",
+		"l2": 4
+	}
+},{
+    "type": "intersect",
+	"id" : 2,
+    "parameters" : {
+		"l1": 1,
+		"l2": "layer2"
+	}
+}
+
+];
+
+function buffer(a,b,c){
+	//console.log("buffer operation");
+	return a = "buffer->";
+}
+
+function intersect(a,b){
+	//console.log("Intersect operation");
+	return b = "intersect->";
+}
+
+function union(a,b){
+	//console.log("Intersect operation");
+	return b = "union->";
+}
+
+var obj =my_json;
+
+var results_objects = {}
+
+var temp; // Stores the result of an operation which will be used in the next operation
+for(var i =0 ; i<my_json.length ; i++){
+
+	//console.log(my_json[i].type);
+	
+	// Inside switch check for all the possible/used Operations
+	switch (my_json[i].type) {   
+		case "buffer":
+			if (my_json[i]==my_json[0]){
+				temp = buffer(my_json[i].parameters.l1 , my_json[i].parameters.radius,my_json[i].parameters.units)
+			}
+			else {
+					temp = temp + buffer(my_json[i].parameters.l1 , my_json[i].parameters.radius,my_json[i].parameters.units)
+
+			}
+			
+			if (my_json[i]==my_json[my_json.length-1])  // If it is the last operation in the model then print/return the final result 
+				console.log(temp);				// return the final result
+			break;
+		case "intersect":
+			if (my_json[i]==my_json[0]){
+				temp = intersect(my_json[i].parameters.l1 , temp)
+			}
+			else {
+				temp = temp + intersect(my_json[i].parameters.l1 , temp)
+				
+			}
+			//console.log(temp);
+			if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
+				console.log(temp);   // return the final result
+			break;
+		case "union":
+			if (my_json[i]==my_json[0]){
+				temp = union(my_json[i].parameters.l1 , temp)
+			}
+			else {
+				temp = temp + union(my_json[i].parameters.l1 , temp)
+				
+			}
+			//console.log(temp);
+			if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
+				console.log(temp);   // return the final result
+			break;	
+	} 
+	//console.log(temp);
+}
+
+
+
+</script>
+
+</body>
+</html>

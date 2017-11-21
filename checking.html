@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>turf.js</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.5.0/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.5.0/build/ol.js"></script>
+    <script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/turf_ThuNov162017.min (1).js"></script>
+	<script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/turf_int+buf.js"></script>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+    <script>
+      // this example uses turf.js for which we don't have an externs file.
+      var source = new ol.source.Vector();
+	  var model_source = new ol.source.Vector();
+      /*fetch('https://openlayers.org/en/v4.5.0/examples/data/geojson/roads-seoul.geojson').then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        var format = new ol.format.GeoJSON();
+        var features = format.readFeatures(json);
+        var street = features[0];
+
+        // convert to a turf.js feature
+        var turfLine = format.writeFeatureObject(street);
+
+        // show a marker every 200 meters
+        var distance = 0.2;
+		
+		var buffer_style =  new ol.style.Style({
+		    stroke: new ol.style.Stroke({
+			color: 'red',
+			width: 5
+		    }),
+		    fill: new ol.style.Fill({
+			 color: "blue"
+		    })
+		});
+		
+        // get the line length in kilometers
+       /* var length = turf.lineDistance(turfLine, 'kilometers');
+        for (var i = 1; i <= length / distance; i++) {
+          var turfPoint = turf.along(turfLine, i * distance, 'kilometers');
+
+          // convert the generated point to a OpenLayers feature
+          var marker = format.readFeature(turfPoint);
+          marker.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+          source.addFeature(marker);
+        }*/
+		/* var buffered = turf.buffer(turfLine,1,"kilometers");
+		 console.log(buffered);
+		 var my_buffer = format.readFeature(buffered);
+		 console.log(my_buffer.getGeometry().getType());
+		 my_buffer.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+		 source.addFeature(my_buffer);*/
+
+		//var model = turf.model(turfLine,1,"kilometers");	
+		/*var model = turf.buffer(turfLine,1,"kilometers");
+		 console.log(model);
+		var my_buffer = format.readFeature(model);
+		
+		 console.log(my_buffer.getGeometry().getType());
+		 my_buffer.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+		 source.addFeature(my_buffer);
+		
+        street.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+        source.addFeature(street);
+      });*/
+	  
+	   var format = new ol.format.GeoJSON();
+	   
+	   
+	  var poly1 = {
+    "type": "Feature",
+    "properties": {
+      "fill": "#0f0"
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[
+        [-122.801742, 45.48565],
+        [-122.801742, 45.60491],
+        [-122.584762, 45.60491],
+        [-122.584762, 45.48565],
+        [-122.801742, 45.48565]
+      ]]
+    }
+  };
+  var poly2 = {
+    "type": "Feature",
+    "properties": {
+      "fill": "#00f"
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[
+        [-122.520217, 45.535693],
+        [-122.64038, 45.553967],
+        [-122.720031, 45.526554],
+        [-122.669906, 45.507309],
+        [-122.723464, 45.446643],
+        [-122.532577, 45.408574],
+        [-122.487258, 45.477466],
+        [-122.520217, 45.535693]
+      ]]
+    }
+ };
+	  
+	  /*var intersect = turf.intersect(poly1,poly2);
+	  console.log(intersect);
+	  
+	   var int_result = format.readFeature(intersect);
+	  int_result.getGeometry().transform('EPSG:4326', 'EPSG:3857');*/
+	  
+	  var polygon1 = format.readFeature(poly1);
+	  polygon1.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+	  
+	  var polygon2 = format.readFeature(poly2);
+	  polygon2.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+	  
+	  //source.addFeature(int_result);
+	  source.addFeature(polygon1);
+	  source.addFeature(polygon2);
+	  
+	  
+	  var model = turf.model(poly1,poly2,1,"kilometers");
+	  var model_result = format.readFeature(model);
+	  console.log(model_result);
+	  model_result.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+	  model_source.addFeature(model_result);
+	  
+      var vectorLayer = new ol.layer.Vector({
+        source: source,
+		style : new ol.style.Style({
+		    stroke: new ol.style.Stroke({
+			color: 'red',
+			width: 1
+		    }),
+		    fill: new ol.style.Fill({
+			 color: "blue"
+		    })
+		})
+		});
+	
+	
+	var modelLayer = new ol.layer.Vector({
+        source: model_source,
+		style : new ol.style.Style({
+		    stroke: new ol.style.Stroke({
+			color: 'blue',
+			width: 2
+		    }),
+		    fill: new ol.style.Fill({
+			 color: "red"
+		    })
+		})
+		});
+	  	
+		
+      var rasterLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+
+      var map = new ol.Map({
+        layers: [rasterLayer, vectorLayer, modelLayer],
+        target: document.getElementById('map'),
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-122.980366, 45.526540]),
+          zoom: 8
+        })
+      });
+    </script>
+  </body>
+</html>
