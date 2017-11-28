@@ -6,8 +6,9 @@
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v4.5.0/build/ol.js"></script>
+    <!-- do not use absolute paths here, as this will not be transferable into other environmentsi!! -->
     <script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/turf_ThuNov162017.min (1).js"></script>
-	<script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/turf_int+buf.js"></script>
+    <script src="./turf_IntBuf.js"></script>
   </head>
   <body>
     <div id="map" class="map"></div>
@@ -173,3 +174,4 @@
     </script>
   </body>
 </html>
+
