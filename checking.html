@@ -6,13 +6,8 @@
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v4.5.0/build/ol.js"></script>
-<<<<<<< HEAD
-   	<script src="/Users/keneuoe/Development/GeoSpinn1/GeoSpinn1-master/GeoSpinn1/turf_FriNov242017.js"></script>
-	<script src="/Users/keneuoe/Development/GeoSpinn1/GeoSpinn1-master/GeoSpinn1/areas.js"></script>
-=======
-   	<script src="https://raw.githubusercontent.com/HsKA-OSGIS/GeoSpinn1/master/turf_FriNov242017.js"></script>
-	<script src="https://raw.githubusercontent.com/HsKA-OSGIS/GeoSpinn1/master/areas.js"></script>
->>>>>>> 4a206b4913d5e549bbfad2bf59a3520213beb841
+   	<script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/turf_FriNov242017.js"></script>
+	<script src="E:/GEOMATICS MASTERS-HSKA/WS 2017-18/OSGIS/areas.js"></script>
   </head>
   <body>
     <div id="map" class="map"></div>
@@ -21,8 +16,62 @@
       var source = new ol.source.Vector();
 	  var source2 = new ol.source.Vector();
 	  var model_source = new ol.source.Vector();
-	  var format = new ol.format.GeoJSON();
-	 	   
+      /*fetch('https://openlayers.org/en/v4.5.0/examples/data/geojson/roads-seoul.geojson').then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        var format = new ol.format.GeoJSON();
+        var features = format.readFeatures(json);
+        var street = features[0];
+
+        // convert to a turf.js feature
+        var turfLine = format.writeFeatureObject(street);
+
+        // show a marker every 200 meters
+        var distance = 0.2;
+		
+		var buffer_style =  new ol.style.Style({
+		    stroke: new ol.style.Stroke({
+			color: 'red',
+			width: 5
+		    }),
+		    fill: new ol.style.Fill({
+			 color: "blue"
+		    })
+		});
+		
+        // get the line length in kilometers
+       /* var length = turf.lineDistance(turfLine, 'kilometers');
+        for (var i = 1; i <= length / distance; i++) {
+          var turfPoint = turf.along(turfLine, i * distance, 'kilometers');
+
+          // convert the generated point to a OpenLayers feature
+          var marker = format.readFeature(turfPoint);
+          marker.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+          source.addFeature(marker);
+        }*/
+		/* var buffered = turf.buffer(turfLine,1,"kilometers");
+		 console.log(buffered);
+		 var my_buffer = format.readFeature(buffered);
+		 console.log(my_buffer.getGeometry().getType());
+		 my_buffer.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+		 source.addFeature(my_buffer);*/
+
+		//var model = turf.model(turfLine,1,"kilometers");	
+		/*var model = turf.buffer(turfLine,1,"kilometers");
+		 console.log(model);
+		var my_buffer = format.readFeature(model);
+		
+		 console.log(my_buffer.getGeometry().getType());
+		 my_buffer.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+		 source.addFeature(my_buffer);
+		
+        street.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+        source.addFeature(street);
+      });*/
+	  
+	   var format = new ol.format.GeoJSON();
+	   
+	   
 	  var poly1 = {
     "type": "Feature",
     "properties": {
@@ -59,7 +108,8 @@
     }
  };
 	  
-var geojson = {
+var rad_points = {
+"name" : "radiation",
 "type": "FeatureCollection",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
@@ -71,38 +121,50 @@ var geojson = {
 };
 
 var areas = areas;
-
+areas['name'] = "areas";
 
 
 
 var my_json = [
 {
-    "type": "buffer",
+ "type": "buffer",
  "id"  : 1,
-    "parameters" :{
-  "l1": "poly1",
-  "radius": 150,
-  "units" : "kilometers"
+ "parameters" :{
+	  "l1": "radiation",
+	  "radius": 150,
+	  "units" : "kilometers"
  }
 }, {
-    "type": "union",
+ "type": "union",
  "id"  : 2,
-    "parameters" : {
+ "parameters" : {
   "l1": 1
  }
 },
 {
-    "type": "intersect",
+ "type": "intersect",
  "id"  : 3,
-    "parameters" : {
+ "parameters" : {
   "l1": 2,
-  "l2": "poly2"
+  "l2": "areas"
+ }
+},
+{
+ "type": "difference",
+ "id"  : 4,
+ "parameters" : {
+  "l1": "areas",
+  "l2": 2
  }
 }
 
 ];   
 
-	 
+	  /*var intersect = turf.intersect(poly1,poly2);
+	  console.log(intersect);
+	  
+	   var int_result = format.readFeature(intersect);
+	  int_result.getGeometry().transform('EPSG:4326', 'EPSG:3857');*/
 	  for (var feature in areas.features){
 		//console.log(areas.features[feature]);
 		var f = format.readFeature(areas.features[feature]);
@@ -111,9 +173,9 @@ var my_json = [
 	  }
 	  
 	  
-	  for (var feature in geojson.features){
-		//console.log(geojson.features[feature]);
-		var f = format.readFeature(geojson.features[feature]);
+	  for (var feature in rad_points.features){
+		//console.log(rad_points.features[feature]);
+		var f = format.readFeature(rad_points.features[feature]);
 		f.getGeometry().transform('EPSG:4326', 'EPSG:3857');
 		source2.addFeature(f);
 	  }
@@ -128,22 +190,22 @@ var my_json = [
 	  source.addFeature(polygon1);
 	  source.addFeature(polygon2);
 	  
+	 var input_layers = [rad_points,areas];
+	  var model = turf.model(my_json , input_layers);
 	  
-	  var model = turf.model(my_json , geojson, areas);
-	  
-	  
+	  /*for (var feature in  model.features){
+		console.log(model.features[feature]);
+		var f = format.readFeature(model.features[feature]);
+		f.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+		model_source.addFeature(f);
+	  }*/
 	  console.log(model);
 	  var model_result = format.readFeatures(model, {
       dataProjection: 'EPSG:4326',
       featureProjection: 'EPSG:3857'
     });
-<<<<<<< HEAD
 	  //console.log(model_result);
 	  //model_result.getGeometry().transform('EPSG:4326', 'EPSG:3857');
-=======
-	  console.log(model_result);
-	 
->>>>>>> 4a206b4913d5e549bbfad2bf59a3520213beb841
 	  model_source.addFeatures(model_result);
 	  
       var areasLayer = new ol.layer.Vector({
