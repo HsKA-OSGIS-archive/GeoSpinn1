@@ -1,0 +1,22 @@
+my_json = [{
+    "type": "buffer",
+ "id"  : 1,
+    "parameters" :{
+  "l1": "poly1",
+  "radius": 150,
+  "units" : "kilometers"
+ }
+}, {
+    "type": "union",
+ "id"  : 2,
+    "parameters" : {
+  "l1": 1
+ }
+},{
+    "type": "intersect",
+ "id"  : 3,
+    "parameters" : {
+  "l1": 2,
+  "l2": "poly2"
+ }
+}];   
