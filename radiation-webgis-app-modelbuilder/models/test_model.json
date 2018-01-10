@@ -1,0 +1,41 @@
+{
+"model_1" : [
+				{
+				 "type": "buffer",
+				 "id"  : 1,
+				 "parameters" :{
+					  "l1": "input_layer1",
+					  "radius": {
+						"default_dist" : 200,
+						"user_defineable" : false,
+						"units" : "kilometres",
+						"dissolve" : true
+					  }
+				 }
+				}, 
+				{
+				 "type": "intersect",
+				 "id"  : 2,
+				 "parameters" : {
+				  "l1": 1,
+				  "l2": "input_layer2"
+				 }
+				},
+				{
+				 "type": "difference",
+				 "id"  : 3,
+				 "parameters" : {
+				  "l1": "input_layer2",
+				  "l2": 1 
+				 }
+				},
+				{
+				 "type": "combine",
+				 "id"  : 4,
+				 "parameters" : {
+				  "l1": 1,
+				  "l2": 3
+				 }
+				}
+			]
+}
