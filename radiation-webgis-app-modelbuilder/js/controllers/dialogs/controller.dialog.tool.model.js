@@ -28,10 +28,13 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 		var select_lyr1 = [];
 		var select_lyr2 = [];
 		var current,current2;
+		var buffer_input; var radius;
 		//console.log(select_model);
 		var mydata;
 		var in_layers = {};
 		var in_layers2 = {};
+		var labels = {"buffer":"BUFFER", "intersect" : "INTERSECT" , "union":"UNION" , "difference":"DIFFERENCE", "combine":"COMBINE"};
+		
 		function change(){
 		$.getJSON('models/test_model1.json', function(data) {
 			//console.log(data);
@@ -50,7 +53,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 			}
 			
 			select_model.onchange = function() {
-				select_model.value;
+				//select_model.value;
 				readModel();
 				
 			}
@@ -69,7 +72,12 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 						current = mydata.all_models[v]
 						for (var op in current.operations){
 							//console.log(current.operations[op].parameters.l1);
-							
+							var lbls = document.createElement("label");
+							lbls.innerHTML = labels[current.operations[op].type];
+							input_para.appendChild(lbls);
+							var space = document.createElement("paragraph");
+							space.innerHTML = "<br/>";
+							input_para.appendChild(space);
 							
 							if (isNaN(current.operations[op].parameters.l1)){
 								select_lyr1[op] = document.createElement("select"); 
@@ -92,12 +100,12 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 											ht.value;
 											alert("changed  " +ht.id);
 											
-											activate2(ht.id,ht.value);
+											updateValues(ht.id,ht.value);
 											//readModel();
 									}*/
 								$(ht).change(function () { 
-									alert(this.id);
-									activate2(this.id , this.value);
+									//alert(this.id);
+									updateValues(this.id , this.value);
 								});
 									
 								input_para.appendChild(select_lyr1[op]);
@@ -106,20 +114,18 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 								
 								
 							}
-							console.log(current.operations[0].parameters.l1);
+							//console.log(current.operations[0].parameters.l1);
 							if (current.operations[op].parameters.l2){
 								if (isNaN(current.operations[op].parameters.l2)){
-									
 									select_lyr2[op] = document.createElement("select"); 
-									
 									select_lyr2[op].id = current.operations[op].parameters.l2;
 									var elem2 = document.createElement('label');
 									elem2.innerHTML = current.operations[op].parameters.l2;    
 									input_para.appendChild(elem2);
 									var th = select_lyr2[op];
 									$(th).change(function () { 
-										alert(this.id);
-										activate2(this.id , this.value);
+										//alert(this.id);
+										updateValues(this.id , this.value);
 									});
 									
 									
@@ -133,33 +139,58 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 									input_para.appendChild(select_lyr2[op]);
 									//alert(current.operations[op].parameters.l1);
 									in_layers[current.operations[op].parameters.l2] = select_lyr2[op].value;
-									console.log(current.operations[0].parameters.l2);
+									//console.log(current.operations[0].parameters.l2);
 
 									
 								}
 							}
-							activate();
+							
+							if(current.operations[op].type == "buffer"){
+								if (current.operations[op].parameters.radius.user_defineable){
+									var buffer_label = document.createElement('label');
+									buffer_label.innerHTML = "Radius: "
+									buffer_input = document.createElement("INPUT");
+									buffer_input.setAttribute("type" , "number");
+									buffer_input.setAttribute("value" , current.operations[op].parameters.radius.default_dist);
+									var unit_label = document.createElement('label');
+									unit_label.innerHTML = " km";
+									input_para.appendChild(buffer_label);
+									input_para.appendChild(buffer_input);
+									input_para.appendChild(unit_label);
+									
+									radius = current.operations[op].parameters.radius.default_dist;
+									current.operations[op].parameters.radius.default_dist = buffer_input.value;
+									
+									$(buffer_input).change(function () { 
+										current.operations[op].parameters.radius.default_dist = buffer_input.value;
+									});
+	
+								}
+							}
+							
+							var space = document.createElement("paragraph");
+							space.innerHTML = "<br/>";
+							input_para.appendChild(space);
+							
+							setValues();
 						}
 					}
 				}
 			}
+
 			
-			read_button.onclick = function(){
-				readModel();
-			}
-			
-			function activate(){
-				console.log(in_layers);
+			function setValues(){
+				//console.log(in_layers);
 				in_layers2 = in_layers;
 
 				var searchEles = input_para.children;
 				for(var i = 0; i < searchEles.length; i++) {
-					console.log(searchEles[i]);
+					//console.log(searchEles[i]);
 					//console.log(searchEles[i].options[searchEles[i].selectedIndex].value);
 				}
 				
 			}
-			function activate2(id,value){
+			function updateValues(id,value){
 				//console.log(in_layers);
 				in_layers2[id] = value;
 				var searchEles = input_para.children;
@@ -171,6 +202,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 			}
 			
 			dw.initModel("model", $element, function(){
+				
 				console.log(in_layers2);
 				console.log(current.operations);
 				current2 = $.extend( [], current.operations);
@@ -219,14 +251,17 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 				
 				
 				var model = turf_model.model(current2, in_layers2);
-				
+				console.log(model);
 				ow.addGeoJsonToSource(model , model_layer);
 
 				ow.rootGroup.getLayers().push(model_layer);
 				sw.init($("#layer_tree"), ow);
 				
 				
-					$("#input_parameters").empty();
+				$("#input_parameters").empty();
+				select_model.value = "Choose Model";
+				
+				//readModel();
 				
 
 			}, ow,{
@@ -245,5 +280,4 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 	
     }; // return function
 
-}); 
-    
+});
