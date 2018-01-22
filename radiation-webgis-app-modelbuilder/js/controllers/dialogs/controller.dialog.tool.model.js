@@ -37,11 +37,14 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 			//console.log(data);
 			mydata = data; 
 			//console.log(mydata.all_models[0].model_name);
-			
+			var option;
+			option = document.createElement("option");
+			option.text = "Choose Model";
+			select_model.add(option);
 			for(var i=0 ; i<mydata.all_models.length ; i++){
 				
 				//console.log(mydata[i]);
-				var option = document.createElement("option");
+				option = document.createElement("option");
 				option.text = mydata.all_models[i].model_name;
 				select_model.add(option);
 			}
@@ -170,7 +173,9 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 			dw.initModel("model", $element, function(){
 				console.log(in_layers2);
 				console.log(current.operations);
-				current2 = current.operations;
+				current2 = $.extend( [], current.operations);
+				//current2 = current.operations;
+				console.log(current2);
 				layers = ow.getLayersFromDataStructure(ow.rootLayerCollection, [], 0);
 				layer_surveyed = {};
 				
@@ -205,7 +210,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 
 				var model_layer = new ol.layer.Vector({
 					name: ow.generateLayerName(),
-					title: "test_model",
+					title: current.model_name,
 					source: new ol.source.Vector({
 					
 					}),
