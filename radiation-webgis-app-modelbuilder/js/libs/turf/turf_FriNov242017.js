@@ -401,12 +401,12 @@
 				else {
 					for (var i = 0 ; i<geo1.features.length-1 ; i++){
 					 if ( i == 0){
-					  var union1 = turf.union(geo1.features[i+1] , geo1.features[i]);
+					  var union1 = u.model_union(geo1.features[i+1] , geo1.features[i]);
 					  
 					 }
 						
 					 else{
-					  union1 = turf.union(union1 , geo1.features[i+1] );
+					  union1 = u.model_union(union1 , geo1.features[i+1] );
 					 }
 					}
 				}
@@ -417,17 +417,17 @@
 				else{				 
 				   for (var i = 0 ; i<geo2.features.length-1 ; i++){    // union the second feature collection to be able to subtract the first featureCollection out of it
 					 if ( i == 0){
-					  var union2 = turf.union(geo2.features[i+1] , geo2.features[i] );
+					  var union2 = u.model_union(geo2.features[i+1] , geo2.features[i] );
 					  
 					 }
 						
 					 else{
-					  union2 = turf.union(union2 , geo2.features[i+1] );
+					  union2 = u.model_union(union2 , geo2.features[i+1] );
 					 }
 					} 
 					
 				}
-				var union = turf.union(union1 , union2);//Now union the two features returned from the union operation operated on each of the individual feature collection
+				var union = u.model_union(union1 , union2);//Now union the two features returned from the union operation operated on each of the individual feature collection
 				//console.log(union1);
 				union_fc.features.push(union);
 				//console.log(union_fc);
@@ -495,6 +495,7 @@
 		   
 		   function buf (e1,r,t,d){
 			var all_buffers = featureCollection([]);
+			var dissolved_buffer = featureCollection([]);
 			
 			for (var i in e1.features){
 			 var a = b.model_buffer(e1.features[i],r,t);
@@ -503,14 +504,31 @@
 			 all_buffers.features.push(a);
 			}
 			
-			/*if(d){  //if dissolve is true then 
-				all_buffers = d.model_dissolve(all_buffers);
-			}*/
-			console.log(all_buffers.features.length);
-			return all_buffers;
-			
-		   }
+					if(d){  //if dissolve is true then 
+						if (all_buffers.features.length == 1){
+						   dissolved_buffer = all_buffers;
+					   }
+				   else{
+						for (var i = 0 ; i<all_buffers.features.length-1 ; i++){   
+							 if ( i == 0){
+							  var union = u.model_union(all_buffers.features[i+1] , all_buffers.features[i] );
+							  
+							 }
+								
+							 else{
+							  union = u.model_union(union , all_buffers.features[i+1] );
+							 }
+							} 
+						console.log(union);
+						dissolved_buffer.features.push(union);
+						console.log(dissolved_buffer);
+					}
+
+				console.log(dissolved_buffer.features.length);
+				return dissolved_buffer;
 				
+			   }
+		   }		
 			module.exports = function(my_json , input_layers) {
 				console.log(my_json);
 				
@@ -521,7 +539,7 @@
 				for (var t in input_layers){  //////////// First of all convert the Feature to FeatureCollection (if any) so as to have every input as Feature collection in the model
 				 if (input_layers[t].type === "Feature" ){
 					var fc  = featureCollection([]);
-					alert("found");
+					//alert("found");
 					fc.features.push(input_layers[t]);
 					input_layers[t] = fc;
 				 }
@@ -555,11 +573,6 @@
 						  }
 						 }
 					 }
-					 
-
-					if (my_json[i].parameters.radius.user_defineable){
-						alert("Define The radius");
-					}
 
 					var dissolve = my_json[i].parameters.radius.dissolve;
 					
@@ -608,7 +621,7 @@
 					}
 					
 					temp = inter(intersect_layer1 , intersect_layer2)
-					
+					console.log(temp);
 					results[i][0] = my_json[i].id;
 					results[i][1] = temp;
 					
@@ -637,7 +650,7 @@
 						 
 					}
 					 if (my_json[i].parameters.l2){
-						 if (isNaN(my_json[i].parameters.l1)){
+						 if (isNaN(my_json[i].parameters.l2)){
 						 union_layer2 = input_layers[my_json[i].parameters.l2];	
 						 }
 						 else{
@@ -651,14 +664,14 @@
 							 
 						}
 					 }
-					//console.log(my_json[i].parameters.l1);
+
 					temp = uni(union_layer1 , union_layer2)
 					results[i][0] = my_json[i].id;
 					results[i][1] = temp;
-				   //console.log(temp);
+
 				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
 					return temp;
-					//console.log(temp);   // return the final result
+
 				   break; 
 				   case "difference":
 						var difference_layer1 , difference_layer2;
@@ -672,7 +685,7 @@
 							  if (my_json[i].parameters.l1 == results[g][0]){
 								   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
 								   difference_layer1 = results[g][1];
-								   alert(results[g][1]);
+								   
 							  }
 							  
 							 }
@@ -689,7 +702,7 @@
 								  if (my_json[i].parameters.l2 == results[g][0]){
 									   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
 									   difference_layer2 = results[g][1];
-									   alert(results[g][1]);
+									   
 								  }
 								  
 								 }
@@ -697,9 +710,7 @@
 							}
 							
 						}
-						
-						console.log(intersect_layer2);
-						console.log(intersect_layer1);
+
 						temp = diff(difference_layer1 , difference_layer2);
 						results[i][0] = my_json[i].id;
 						results[i][1] = temp;
