@@ -286,8 +286,12 @@
                 radiansToDistance = helpers.radiansToDistance,
                 distanceToRadians = helpers.distanceToRadians;
 				
+<<<<<<< HEAD
 				
              function model_buffer (e,r,t,o){
+=======
+            module.exports = function (e,r,t,o){
+>>>>>>> origin/master
 				if (!e) throw new Error("geojson is required");
                 if (void 0 === r) throw new Error("radius is required");
                 if (o <= 0) throw new Error("steps must be greater than 0");
@@ -307,12 +311,16 @@
                             })
                         }), featureCollection(n)
                 }
+<<<<<<< HEAD
 				alert("Inside model buffer");
                 return buffer(e, r, t, o)
 			}
 				
             module.exports = {
                 model_buffer : model_buffer
+=======
+                return buffer(e, r, t, o)
+>>>>>>> origin/master
             };        
         }, {
             "@turf/bbox": 3,
@@ -323,13 +331,18 @@
             "d3-geo": 31,
             "jsts": 39
         }],
+<<<<<<< HEAD
 		43: [function(require, module, exports) {
+=======
+		/*43: [function(require, module, exports) {
+>>>>>>> origin/master
 			   var b = require("@turf/buffer");
 			   var m = require("@turf/intersect");
 			   var u = require("@turf/union");
 			   var d = require("@turf/dissolve");
 			   var featureCollection = require('@turf/helpers').featureCollection;
 						
+<<<<<<< HEAD
 			   function uni(e1){
 				
 				var all_union  = featureCollection([]);
@@ -347,19 +360,71 @@
 				}
 				all_union.features.push(union);
 				return all_union;
+=======
+			   function uni(){
+				
+					var all_union  = featureCollection([]);
+					var all_union_features  = featureCollection([]);   //For putting first all single features into one featureCollection
+					  
+					for (var t = 0 ; t<arguments.length ; t++){
+					
+					 //console.log(arguments[t].features[t]);
+					 if (arguments[t].type === "Feature" ){
+					  all_union_features.features.push(arguments[t]);
+					 }
+					 else if (arguments[t].type === "FeatureCollection" ){
+					  
+					  for (var i = 0 ; i<arguments[t].features.length ; i++){
+					   //alert("FeatureCollection");
+					   all_union_features.features.push(arguments[t].features[i]);
+					   
+					  }
+					 }
+					 
+					}
+					
+					console.log(all_union_features);
+					
+					for (var i = 0 ; i<all_union_features.features.length-1 ; i++){
+					 
+					 
+					 //console.log(arguments[t].features[0]);
+					 if ( i == 0){
+					  var union = turf.union(all_union_features.features[i+1] , all_union_features.features[i] );
+					  
+					 }
+						
+					 else{
+					  union = turf.union(union , all_union_features.features[i+1] );
+					 }
+					} 
+					console.log(union);
+					all_union.features.push(union);
+					console.log(all_union);
+					return all_union;
+>>>>>>> origin/master
 				
 			   }
 			   
 			   function inter(geo1,geo2){
 				
 				var all_intersections = featureCollection([]);
+<<<<<<< HEAD
 				console.log("geo1 :  "+JSON.stringify(geo1.features));
 				console.log("geo2 :  "+JSON.stringify(geo2.features));
+=======
+				//console.log("geo1 :  "+JSON.stringify(geo1.features));
+				//console.log("geo2 :  "+JSON.stringify(geo2.features));
+>>>>>>> origin/master
 				for (var i in geo1.features){
 				 for (var j in geo2.features){
 				  
 				  var a = m.model_intersect(geo1.features[0],geo2.features[j]);
+<<<<<<< HEAD
 				  console.log(a);
+=======
+				  //console.log(a);
+>>>>>>> origin/master
 				  if (a!=null)
 				   all_intersections.features.push(a);
 				 }
@@ -393,7 +458,29 @@
 				//console.log(buffer_result);
 				return intersect_result;*/
 				
+<<<<<<< HEAD
 				
+=======
+	/*			var check = {
+  "type": "Feature",
+  "properties": {
+    "fill": "IN USA"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+   [-122.520217, 45.535693],
+   [-122.64038, 45.553967],
+   [-122.720031, 45.526554],
+   [-122.669906, 45.507309],
+   [-122.723464, 45.446643],
+   [-122.532577, 45.408574],
+   [-122.487258, 45.477466],
+   [-122.520217, 45.535693]
+    ]]
+  }
+   };
+>>>>>>> origin/master
 				
 				var results = new Array(my_json.length);
 				for (var i = 0 ; i< my_json.length; i++){
@@ -464,9 +551,15 @@
 					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
 					   my_json[i].parameters.l2 = results[g][1];
 					  }*/
+<<<<<<< HEAD
 					 }
 					temp = uni(my_json[i].parameters.l1 /*, my_json[i].parameters.l2*/)
 					results[i][0] = my_json[i].id;
+=======
+					/* }
+					temp = uni(my_json[i].parameters.l1 ,check/*, my_json[i].parameters.l2*///)
+					/*results[i][0] = my_json[i].id;
+>>>>>>> origin/master
 					results[i][1] = temp;
 				   //console.log(temp);
 				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
@@ -476,11 +569,290 @@
 				 } 
 				 //console.log(temp);
 				}
+<<<<<<< HEAD
 				
 				
 				
 				
 				
+=======
+	
+				
+				};
+				}, {
+					"@turf/buffer": 7,
+					"@turf/intersect": 19,
+				    "@turf/union": 29,
+				    "@turf/dissolve" : 16,
+				    "@turf/helpers":10
+        }],*/
+		43: [function(require, module, exports) {
+           /*var b = require("@turf/buffer");
+		   var m = require("@turf/intersect");
+		   var u = require("@turf/union");
+		   var d = require("@turf/dissolve");*/
+		   var featureCollection = require('@turf/helpers').featureCollection;
+					
+		   function uni(){
+			
+			var all_union  = featureCollection([]);
+			var all_union_features  = featureCollection([]);   //For putting first all single features into one featureCollection
+			  
+			for (var t = 0 ; t<arguments.length ; t++){
+			
+			 //console.log(arguments[t].features[t]);
+			 if (arguments[t].type === "Feature" ){
+			  all_union_features.features.push(arguments[t]);
+			 }
+			 else if (arguments[t].type === "FeatureCollection" ){
+			  
+			  for (var i = 0 ; i<arguments[t].features.length ; i++){
+			   //alert("FeatureCollection");
+			   all_union_features.features.push(arguments[t].features[i]);
+			   
+			  }
+			 }
+			 
+			}
+			
+			//console.log(all_union_features);
+			
+			for (var i = 0 ; i<all_union_features.features.length-1 ; i++){
+			 
+			 
+			 //console.log(arguments[t].features[0]);
+			 if ( i == 0){
+			  var union = turf.union(all_union_features.features[i+1] , all_union_features.features[i] );
+			  
+			 }
+				
+			 else{
+			  union = turf.union(union , all_union_features.features[i+1] );
+			 }
+			} 
+			//console.log(union);
+			all_union.features.push(union);
+			//console.log(all_union);
+			return all_union;
+			
+		   }
+		   
+		   function diff(geo1,geo2){
+			
+				var all_differences = featureCollection([]);   // to store the final result which has to be returned
+				
+				for (var i in geo1.features){
+				 for (var j in geo2.features){
+				  
+				  var a = turf.difference(geo1.features[i],geo2.features[j]);
+				  //console.log(a);
+				  if (a!=null)
+				   all_differences.features.push(a);
+				 }
+				}
+				//console.log(all_intersections);
+				return all_differences;
+			
+		   }
+		   
+		   function inter(geo1,geo2){
+			
+			var all_intersections = featureCollection([]);
+			//console.log("geo1 :  "+JSON.stringify(geo1.features));
+			//console.log("geo2 :  "+JSON.stringify(geo2.features));
+			for (var i in geo1.features){
+			 for (var j in geo2.features){
+			  
+			  var a = turf.intersect(geo1.features[i],geo2.features[j]);
+			  //console.log(a);
+			  if (a!=null)
+			   all_intersections.features.push(a);
+			 }
+			}
+			//console.log(all_intersections);
+			return all_intersections;
+			
+		   }
+		   
+		   
+		   function buf (e1,r,t){
+			var all_buffers = featureCollection([]);
+			
+			for (var i in e1.features){
+			 var a = turf.buffer(e1.features[i],r,t);
+			 //console.log(a);
+			 
+			 all_buffers.features.push(a);
+			}
+			return all_buffers;
+			
+		   }
+				
+			module.exports = function(my_json , input_layers) {
+				
+				/*alert("in the model");
+							var buffer_result = buf(e1,r,t);
+				console.log(buffer_result.type);
+				var union_result = uni(buffer_result);
+				var intersect_result = inter(union_result,e2);
+				//console.log(buffer_result);
+				return intersect_result;*/
+				//console.log(input_layers);
+				for(var v in input_layers){	
+					console.log(input_layers[v].name);
+				}
+				
+				var results = new Array(my_json.length);
+				for (var i = 0 ; i< my_json.length; i++){
+				 results[i] = new Array(2);
+				}
+				var temp; // Stores the result of an operation which will be used in the next operation
+				for(var i = 0 ; i<my_json.length ; i++){
+				 //console.log(my_json[i].type);
+				 //alert("In Loop");
+				 // Inside switch check for all the possible/used Operations
+				 switch (my_json[i].type) {   
+				  case "buffer":
+					 //alert("In buffer" + i);
+					 var layer1;
+					 for (var g = 0 ; g<results.length ; g++){
+					  //console.log(results[g][0] +" ------- "+results[g][1]);
+					  if (my_json[i].parameters.l1 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l1 = results[g][1];
+					   //my_json[i].parameters.l1 = poly1 ;
+					  }
+					 }
+					 for(var v in input_layers){	
+						if(my_json[i].parameters.l1 == input_layers[v].name){
+							my_json[i].parameters.l1 = input_layers[v];
+							layer1 = input_layers[v];
+						}
+					 } 
+
+					temp = buf(my_json[i].parameters.l1 , my_json[i].parameters.radius,my_json[i].parameters.units)
+					results[i][0] = my_json[i].id;
+					results[i][1] = temp;
+					//console.log(results[i][0] +" <<<<<<<<<<<< "+results[i][1]);
+				   
+				   if (my_json[i]==my_json[my_json.length-1])  // If it is the last operation in the model then print/return the final result 
+					return temp;
+					//console.log("In buffer " + temp);    // return the final result
+					
+				   break;
+				  case "intersect":
+					 //alert("In Intersect" + i);
+					 for (var g = 0 ; g<results.length ; g++){
+					  //console.log(results[g][0] +" ------- "+results[g][1]);
+					  if (my_json[i].parameters.l1 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l1 = results[g][1];
+					  }
+					  
+					  if (my_json[i].parameters.l2 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l2 = results[g][1];
+					   //my_json[i].parameters.l2 = poly2;
+					  }
+					 }
+					 
+					 for(var v in input_layers){	
+						if(my_json[i].parameters.l1 == input_layers[v].name){
+							my_json[i].parameters.l1 = input_layers[v];
+						}
+						if(my_json[i].parameters.l2 == input_layers[v].name){
+							my_json[i].parameters.l2 = input_layers[v];
+						}
+					 } 
+					 //console.log(my_json[i].parameters.l1);
+					 //console.log(my_json[i].parameters.l2);
+					 
+					temp = inter(my_json[i].parameters.l1 , my_json[i].parameters.l2)
+					results[i][0] = my_json[i].id;
+					results[i][1] = temp;
+					
+				   //console.log(temp);
+				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
+					return temp;
+					//console.log(temp);   // return the final result
+					
+				   break;
+				  case "union":
+					//alert("In Union" + i);
+					for (var g = 0 ; g<results.length ; g++){
+					  //console.log(results[g][0] +" ------- "+results[g][1]);
+					  if (my_json[i].parameters.l1 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l1 = results[g][1];
+					  }
+					  if (my_json[i].parameters.l2){
+						  if (my_json[i].parameters.l2 == results[g][0]){
+						   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+						   my_json[i].parameters.l2 = results[g][1];
+						  }
+					  }
+					 }
+					 for(var v in input_layers){	
+						if(my_json[i].parameters.l1 == input_layers[v].name){
+							my_json[i].parameters.l1 = input_layers[v];
+						}
+						if (my_json[i].parameters.l2){
+						  if(my_json[i].parameters.l2 == input_layers[v].name){
+							 my_json[i].parameters.l2 = input_layers[v];
+						  }
+						}
+
+					 }
+					//console.log(my_json[i].parameters.l1);
+					temp = uni(my_json[i].parameters.l1 /*, my_json[i].parameters.l2*/)
+					results[i][0] = my_json[i].id;
+					results[i][1] = temp;
+				   //console.log(temp);
+				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
+					return temp;
+					//console.log(temp);   // return the final result
+				   break; 
+				   case "difference":
+					 alert("In difference" + i);
+					 for (var g = 0 ; g<results.length ; g++){
+					  //console.log(results[g][0] +" ------- "+results[g][1]);
+					  if (my_json[i].parameters.l1 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l1 = results[g][1];
+					  }
+					  
+					  if (my_json[i].parameters.l2 == results[g][0]){
+					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+					   my_json[i].parameters.l2 = results[g][1];
+					   //my_json[i].parameters.l2 = poly2;
+					  }
+					 }
+					 
+					 for(var v in input_layers){	
+						if(my_json[i].parameters.l1 == input_layers[v].name){
+							my_json[i].parameters.l1 = input_layers[v];
+						}
+						if(my_json[i].parameters.l2 == input_layers[v].name){
+							my_json[i].parameters.l2 = input_layers[v];
+						}
+					 } 
+					 //console.log(my_json[i].parameters.l1);
+					 //console.log(my_json[i].parameters.l2);
+					 
+					temp = diff(my_json[i].parameters.l1 , my_json[i].parameters.l2)
+					results[i][0] = my_json[i].id;
+					results[i][1] = temp;
+					
+				   //console.log(temp);
+				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
+					return temp; 
+					//console.log(temp);   // return the final result
+					
+				   break;
+				 } //switch end
+
+				}
+>>>>>>> origin/master
 				
 				};
 				}, {
@@ -1300,7 +1672,12 @@
             var jsts = require("jsts"),
                 truncate = require("@turf/truncate"),
                 feature = require("@turf/helpers").feature;
+<<<<<<< HEAD
             function model_intersect(e,r){
+=======
+            
+            module.exports = function (e,r){
+>>>>>>> origin/master
 				var t = "Feature" === e.type ? e.geometry : e,
                     u = "Feature" === r.type ? r.geometry : r,
                     a = new jsts.io.GeoJSONReader,
@@ -1311,10 +1688,14 @@
                 var o = new jsts.io.GeoJSONWriter,
                     f = o.write(s);
                 return feature(f)
+<<<<<<< HEAD
 			}
             module.exports = {
                 model_intersect : model_intersect
             };
+=======
+			};
+>>>>>>> origin/master
 
         }, {
             "@turf/helpers": 18,
@@ -1923,7 +2304,13 @@
         29: [function(require, module, exports) {
             var jsts = require("jsts");
 			
+<<<<<<< HEAD
 			function model_union(){
+=======
+			
+			
+            module.exports = function(){
+>>>>>>> origin/master
 				
 				var reader = new jsts.io.GeoJSONReader();
 					var result = reader.read(JSON.stringify(arguments[0].geometry));
@@ -1941,11 +2328,15 @@
 						properties: arguments[0].properties
 					};
 				
+<<<<<<< HEAD
 			}
 			
             module.exports = {
 				model_union : model_union
             };
+=======
+			};
+>>>>>>> origin/master
         }, {
             "jsts": 39
         }],
@@ -22684,7 +23075,113 @@
         42: [function(require, module, exports) {
             module.exports.RADIUS = 6378137, module.exports.FLATTENING = 1 / 298.257223563, module.exports.POLAR_RADIUS = 6356752.3142;
         }, {}],
+<<<<<<< HEAD
         44: [function(require, module, exports) {
+=======
+		44:[function(require,module,exports){
+			var invariant = require('@turf/invariant');
+
+			// http://en.wikipedia.org/wiki/Even%E2%80%93odd_rule
+			// modified from: https://github.com/substack/point-in-polygon/blob/master/index.js
+			// which was modified from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+			/**
+			 * Takes a {@link Point} and a {@link Polygon} or {@link MultiPolygon} and determines if the point resides inside the polygon. The polygon can
+			 * be convex or concave. The function accounts for holes.
+			 *
+			 * @name inside
+			 * @param {Feature<Point>} point input point
+			 * @param {Feature<(Polygon|MultiPolygon)>} polygon input polygon or multipolygon
+			 * @return {Boolean} `true` if the Point is inside the Polygon; `false` if the Point is not inside the Polygon
+			 * @example
+			 * var pt1 = {
+			 *   "type": "Feature",
+			 *   "properties": {
+			 *     "marker-color": "#f00"
+			 *   },
+			 *   "geometry": {
+			 *     "type": "Point",
+			 *     "coordinates": [-111.467285, 40.75766]
+			 *   }
+			 * };
+			 * var pt2 = {
+			 *   "type": "Feature",
+			 *   "properties": {
+			 *     "marker-color": "#0f0"
+			 *   },
+			 *   "geometry": {
+			 *     "type": "Point",
+			 *     "coordinates": [-111.873779, 40.647303]
+			 *   }
+			 * };
+			 * var poly = {
+			 *   "type": "Feature",
+			 *   "properties": {},
+			 *   "geometry": {
+			 *     "type": "Polygon",
+			 *     "coordinates": [[
+			 *       [-112.074279, 40.52215],
+			 *       [-112.074279, 40.853293],
+			 *       [-111.610107, 40.853293],
+			 *       [-111.610107, 40.52215],
+			 *       [-112.074279, 40.52215]
+			 *     ]]
+			 *   }
+			 * };
+			 *
+			 * var features = {
+			 *   "type": "FeatureCollection",
+			 *   "features": [pt1, pt2, poly]
+			 * };
+			 *
+			 * //=features
+			 *
+			 * var isInside1 = turf.inside(pt1, poly);
+			 * //=isInside1
+			 *
+			 * var isInside2 = turf.inside(pt2, poly);
+			 * //=isInside2
+			 */
+			module.exports = function input(point, polygon) {
+				var pt = invariant.getCoord(point);
+				var polys = polygon.geometry.coordinates;
+				// normalize to multipolygon
+				if (polygon.geometry.type === 'Polygon') polys = [polys];
+
+				for (var i = 0, insidePoly = false; i < polys.length && !insidePoly; i++) {
+					// check if it is in the outer ring first
+					if (inRing(pt, polys[i][0])) {
+						var inHole = false;
+						var k = 1;
+						// check for the point in any of the holes
+						while (k < polys[i].length && !inHole) {
+							if (inRing(pt, polys[i][k])) {
+								inHole = true;
+							}
+							k++;
+						}
+						if (!inHole) insidePoly = true;
+					}
+				}
+				return insidePoly;
+			};
+
+			// pt is [x,y] and ring is [[x,y], [x,y],..]
+			function inRing(pt, ring) {
+				var isInside = false;
+				for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+					var xi = ring[i][0], yi = ring[i][1];
+					var xj = ring[j][0], yj = ring[j][1];
+					var intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+					(pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi);
+					if (intersect) isInside = !isInside;
+				}
+				return isInside;
+			}
+
+			},{"@turf/invariant":20}],
+        45: [function(require, module, exports) {
+>>>>>>> origin/master
             module.exports = {
                 buffer: require("@turf/buffer"),
                 combine: require("@turf/combine"),
@@ -22693,6 +23190,10 @@
                 intersect: require("@turf/intersect"),
                 nearest: require("@turf/nearest"),
                 union: require("@turf/union"),
+<<<<<<< HEAD
+=======
+				inside: require("@turf/inside"),
+>>>>>>> origin/master
 				model: require("@turf/model")
             };
         }, {
@@ -22703,8 +23204,16 @@
             "@turf/intersect": 19,
             "@turf/nearest": 25,
             "@turf/union": 29,
+<<<<<<< HEAD
 			"@turf/model": 43
 			
         }]
     }, {}, [44])(44)
+=======
+			"@turf/inside": 44,
+			"@turf/model": 43
+			
+        }]
+    }, {}, [45])(45)
+>>>>>>> origin/master
 });
