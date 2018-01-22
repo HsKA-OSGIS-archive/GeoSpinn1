@@ -343,211 +343,7 @@
             "d3-geo": 31,
             "jsts": 39
         }],
-		/*43: [function(require, module, exports) {
-			   var b = require("@turf/buffer");
-			   var m = require("@turf/intersect");
-			   var u = require("@turf/union");
-			   var d = require("@turf/dissolve");
-			   var featureCollection = require('@turf/helpers').featureCollection;
-						
-			   function uni(){
-				
-					var all_union  = featureCollection([]);
-					var all_union_features  = featureCollection([]);   //For putting first all single features into one featureCollection
-					  
-					for (var t = 0 ; t<arguments.length ; t++){
-					
-					 //console.log(arguments[t].features[t]);
-					 if (arguments[t].type === "Feature" ){
-					  all_union_features.features.push(arguments[t]);
-					 }
-					 else if (arguments[t].type === "FeatureCollection" ){
-					  
-					  for (var i = 0 ; i<arguments[t].features.length ; i++){
-					   //alert("FeatureCollection");
-					   all_union_features.features.push(arguments[t].features[i]);
-					   
-					  }
-					 }
-					 
-					}
-					
-					console.log(all_union_features);
-					
-					for (var i = 0 ; i<all_union_features.features.length-1 ; i++){
-					 
-					 
-					 //console.log(arguments[t].features[0]);
-					 if ( i == 0){
-					  var union = turf.union(all_union_features.features[i+1] , all_union_features.features[i] );
-					  
-					 }
-						
-					 else{
-					  union = turf.union(union , all_union_features.features[i+1] );
-					 }
-					} 
-					console.log(union);
-					all_union.features.push(union);
-					console.log(all_union);
-					return all_union;
-				
-			   }
-			   
-			   function inter(geo1,geo2){
-				
-				var all_intersections = featureCollection([]);
-				//console.log("geo1 :  "+JSON.stringify(geo1.features));
-				//console.log("geo2 :  "+JSON.stringify(geo2.features));
-				for (var i in geo1.features){
-				 for (var j in geo2.features){
-				  
-				  var a = m.model_intersect(geo1.features[0],geo2.features[j]);
-				  //console.log(a);
-				  if (a!=null)
-				   all_intersections.features.push(a);
-				 }
-				}
-				console.log(all_intersections);
-				return all_intersections;
-				
-			   }
-			   
-			   
-			   function buf (e1,r,t){
-				var all_buffers = featureCollection([]);
-				
-				for (var i in e1.features){
-				 var a = b.model_buffer(e1.features[i],r,t);
-				 //console.log(a);
-				 
-				 all_buffers.features.push(a);
-				}
-				return all_buffers;
-				
-			   } 
-				
-			module.exports = function(my_json , poly1 , poly2) {
-				
-				/*alert("in the model");
-							var buffer_result = buf(e1,r,t);
-				console.log(buffer_result.type);
-				var union_result = uni(buffer_result);
-				var intersect_result = inter(union_result,e2);
-				//console.log(buffer_result);
-				return intersect_result;*/
-				
-	/*			var check = {
-  "type": "Feature",
-  "properties": {
-    "fill": "IN USA"
-  },
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [[
-   [-122.520217, 45.535693],
-   [-122.64038, 45.553967],
-   [-122.720031, 45.526554],
-   [-122.669906, 45.507309],
-   [-122.723464, 45.446643],
-   [-122.532577, 45.408574],
-   [-122.487258, 45.477466],
-   [-122.520217, 45.535693]
-    ]]
-  }
-   };
-				
-				var results = new Array(my_json.length);
-				for (var i = 0 ; i< my_json.length; i++){
-				 results[i] = new Array(2);
-				}
-				var temp; // Stores the result of an operation which will be used in the next operation
-				for(var i = 0 ; i<my_json.length ; i++){
-				 //console.log(my_json[i].type);
-				 alert("In Loop");
-				 // Inside switch check for all the possible/used Operations
-				 switch (my_json[i].type) {   
-				  case "buffer":
-					 alert("In buffer" + i);
-					 for (var g = 0 ; g<results.length ; g++){
-					  //console.log(results[g][0] +" ------- "+results[g][1]);
-					  if (my_json[i].parameters.l1 == results[g][0]){
-					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l1 = results[g][1];
-					   my_json[i].parameters.l1 = poly1 ;
-					  }
-					 }
-				 
-					temp = buf(my_json[i].parameters.l1=poly1 , my_json[i].parameters.radius,my_json[i].parameters.units)
-					results[i][0] = my_json[i].id;
-					results[i][1] = temp;
-					//console.log(results[i][0] +" <<<<<<<<<<<< "+results[i][1]);
-				   
-				   if (my_json[i]==my_json[my_json.length-1])  // If it is the last operation in the model then print/return the final result 
-					return temp;
-					console.log("In buffer " + temp);    // return the final result
-					
-				   break;
-				  case "intersect":
-					 alert("In Intersect" + i);
-					 for (var g = 0 ; g<results.length ; g++){
-					  //console.log(results[g][0] +" ------- "+results[g][1]);
-					  if (my_json[i].parameters.l1 == results[g][0]){
-					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l1 = results[g][1];
-					  }
-					  
-					  if (my_json[i].parameters.l2 == results[g][0]){
-					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l2 = results[g][1];
-					   my_json[i].parameters.l2 = poly2;
-					  }
-					 }
-					temp = inter(my_json[i].parameters.l1 , my_json[i].parameters.l2=poly2)
-					results[i][0] = my_json[i].id;
-					results[i][1] = temp;
-					
-				   //console.log(temp);
-				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
-					return temp;
-					console.log(temp);   // return the final result
-					
-				   break;
-				  case "union":
-					alert("In Union" + i);
-					for (var g = 0 ; g<results.length ; g++){
-					  //console.log(results[g][0] +" ------- "+results[g][1]);
-					  if (my_json[i].parameters.l1 == results[g][0]){
-					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l1 = results[g][1];
-					  }
-					  
-					  /*if (my_json[i].parameters.l2 == results[g][0]){
-					   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l2 = results[g][1];
-					  }*/
-					/* }
-					temp = uni(my_json[i].parameters.l1 ,check/*, my_json[i].parameters.l2*///)
-					/*results[i][0] = my_json[i].id;
-					results[i][1] = temp;
-				   //console.log(temp);
-				   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
-					return temp;
-					console.log(temp);   // return the final result
-				   break; 
-				 } 
-				 //console.log(temp);
-				}
-	
-				
-				};
-				}, {
-					"@turf/buffer": 7,
-					"@turf/intersect": 19,
-				    "@turf/union": 29,
-				    "@turf/dissolve" : 16,
-				    "@turf/helpers":10
-        }],*/
+		
 		43: [function(require, module, exports) {
            var b = require("@turf/buffer");
 		   var m = require("@turf/intersect");
@@ -745,65 +541,74 @@
 				 // Inside switch check for all the possible/used Operations
 				 switch (my_json[i].type) {   
 				  case "buffer":
-					 //alert("In buffer" + i);
-					 var layer1;
-					 my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1]
-					 for (var g = 0 ; g<results.length ; g++){
-					  //console.log(results[g][0] +" ------- "+results[g][1]);
-					  if (my_json[i].parameters.l1 == results[g][0]){
-					   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-					   my_json[i].parameters.l1 = results[g][1];
-					   //my_json[i].parameters.l1 = poly1 ;
-					  }
+					 var buffer_layer1;
+					 if (isNaN(my_json[i].parameters.l1)){
+						buffer_layer1 = input_layers[my_json[i].parameters.l1];
 					 }
+					 
+					 else{
+						for (var g = 0 ; g<results.length ; g++){
+						  if (my_json[i].parameters.l1 == results[g][0]){
+
+								buffer_layer1 = results[g][1];
+
+						  }
+						 }
+					 }
+					 
 
 					if (my_json[i].parameters.radius.user_defineable){
 						alert("Define The radius");
 					}
-					//console.log(my_json[i].parameters.l1);
-					
+
 					var dissolve = my_json[i].parameters.radius.dissolve;
 					
-					temp = buf(my_json[i].parameters.l1, my_json[i].parameters.radius.default_dist , my_json[i].parameters.radius.units,dissolve)
-					
+					temp = buf(buffer_layer1, my_json[i].parameters.radius.default_dist , my_json[i].parameters.radius.units,dissolve)
+					console.log(temp);
 					results[i][0] = my_json[i].id;
 					results[i][1] = temp;
-					//console.log(results[i][0] +" <<<<<<<<<<<< "+results[i][1]);
+
 					
 				   if (my_json[i]==my_json[my_json.length-1])  // If it is the last operation in the model then print/return the final result 
 					return temp;
-					//console.log(temp);    // return the final result
+
 					
 				   break;
 				  case "intersect":
+				  var intersect_layer1,intersect_layer2;
 					if (isNaN(my_json[i].parameters.l1)){
-						 my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];	
+						 //my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];
+						 intersect_layer1 = input_layers[my_json[i].parameters.l1];						 
 					}
 					else{
 						 for (var g = 0 ; g<results.length ; g++){
 						  if (my_json[i].parameters.l1 == results[g][0]){
-							   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-							   my_json[i].parameters.l1 = results[g][1];
+							  console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+							  intersect_layer1 = results[g][1];
+							  
 						  }
 						  
 						 }
 						 
 					}
 					if (isNaN(my_json[i].parameters.l2)){
-						my_json[i].parameters.l2 = input_layers[my_json[i].parameters.l2];	
+						//my_json[i].parameters.l2 = input_layers[my_json[i].parameters.l2];
+						intersect_layer2 = input_layers[my_json[i].parameters.l2];					
 					}
 					else{
 						
 						 for (var g = 0 ; g<results.length ; g++){
 						  if (my_json[i].parameters.l2 == results[g][0]){
 							   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-							   my_json[i].parameters.l2 = results[g][1];
+							   intersect_layer2 = results[g][1];
 						  }
 						  
 						 }
 						 
 					}
-					temp = inter(my_json[i].parameters.l1 , my_json[i].parameters.l2)
+					
+					temp = inter(intersect_layer1 , intersect_layer2)
+					
 					results[i][0] = my_json[i].id;
 					results[i][1] = temp;
 					
@@ -814,43 +619,40 @@
 					
 				   break;
 				  case "union":
-					//alert("In Union" + i);
-					
-					//my_json[i].parameters.l2 = input_layers[my_json[i].parameters.l2];
-					var layer1,l1,layer2,l2;
-					var layer1 = my_json[i].parameters.l1;
-					console.log(results);
+				  var union_layer1, union_layer2;
 					if (isNaN(my_json[i].parameters.l1)){
-						 my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];	
+						 //my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];
+						union_layer1 = input_layers[my_json[i].parameters.l1];
 					}
 					else{
-						 alert();
+						 //alert();
 						 for (var g = 0 ; g<results.length ; g++){
 						  if (my_json[i].parameters.l1 == results[g][0]){
-							   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-							   my_json[i].parameters.l1 = results[g][1];
+							   //console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+							   union_layer1 = results[g][1];
+							   
 						  }
 						  
 						 }
 						 
 					}
 					 if (my_json[i].parameters.l2){
-						 if (isNaN(my_json[i].parameters.l2)){
-						 my_json[i].parameters.l2 = input_layers[my_json[i].parameters.l2];	
+						 if (isNaN(my_json[i].parameters.l1)){
+						 union_layer2 = input_layers[my_json[i].parameters.l2];	
 						 }
 						 else{
 							 for (var g = 0 ; g<results.length ; g++){
 							  if (my_json[i].parameters.l2 == results[g][0]){
 								   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-								   my_json[i].parameters.l2 = results[g][1];
+								   union_layer2 = results[g][1];
 							  }
 							  
 							 }
 							 
 						}
 					 }
-					console.log(my_json[i].parameters.l1);
-					temp = uni(my_json[i].parameters.l1 , my_json[i].parameters.l2)
+					//console.log(my_json[i].parameters.l1);
+					temp = uni(union_layer1 , union_layer2)
 					results[i][0] = my_json[i].id;
 					results[i][1] = temp;
 				   //console.log(temp);
@@ -859,66 +661,77 @@
 					//console.log(temp);   // return the final result
 				   break; 
 				   case "difference":
+						var difference_layer1 , difference_layer2;
 						if (isNaN(my_json[i].parameters.l1)){
-							 my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];	
+							//my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];
+							difference_layer1 = input_layers[my_json[i].parameters.l1];
+						
 						}
 						else{
 							 for (var g = 0 ; g<results.length ; g++){
 							  if (my_json[i].parameters.l1 == results[g][0]){
 								   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-								   my_json[i].parameters.l1 = results[g][1];
+								   difference_layer1 = results[g][1];
+								   alert(results[g][1]);
 							  }
 							  
 							 }
 							 
 						}
-						if (isNaN(my_json[i].parameters.l2)){
-							my_json[i].parameters.l2 = input_layers[my_json[i].parameters.l2];	
-						}
-						else{
+						if (my_json[i].parameters.l2){
 							
-							 for (var g = 0 ; g<results.length ; g++){
-							  if (my_json[i].parameters.l2 == results[g][0]){
-								   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-								   my_json[i].parameters.l2 = results[g][1];
-							  }
-							  
-							 }
-							 
+							if (isNaN(my_json[i].parameters.l2)){
+								difference_layer2 = input_layers[my_json[i].parameters.l2];	
+							}
+							else{
+								
+								 for (var g = 0 ; g<results.length ; g++){
+								  if (my_json[i].parameters.l2 == results[g][0]){
+									   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
+									   difference_layer2 = results[g][1];
+									   alert(results[g][1]);
+								  }
+								  
+								 }
+								 
+							}
+							
 						}
-
-						temp = diff(my_json[i].parameters.l1 , my_json[i].parameters.l2);
+						
+						console.log(intersect_layer2);
+						console.log(intersect_layer1);
+						temp = diff(difference_layer1 , difference_layer2);
 						results[i][0] = my_json[i].id;
 						results[i][1] = temp;
 						
 					  
 					   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
 						return temp; 
-						//console.log(temp);   // return the final result
+
 						
 					   break;
 					case "combine":
+					var combine_layer1; 
 						if (isNaN(my_json[i].parameters.l1)){
-							 my_json[i].parameters.l1 = input_layers[my_json[i].parameters.l1];	
+							 combine_layer1 = input_layers[my_json[i].parameters.l1];	
 						}
 						else{
 							 for (var g = 0 ; g<results.length ; g++){
 							  if (my_json[i].parameters.l1 == results[g][0]){
-								   console.log("Yes, takes result from "+results[g][0]+" and forms this:  "+results[g][1]);
-								   my_json[i].parameters.l1 = results[g][1];
+								   combine_layer1 = results[g][1];
 							  }
 							  
 							 }
 							 
 						}
-						temp = turf.combine(my_json[i].parameters.l1);//diff(my_json[i].parameters.l1 , my_json[i].parameters.l2);
+						temp = turf.combine(combine_layer1);
 						results[i][0] = my_json[i].id;
 						results[i][1] = temp;
 						
 					  
 					   if (my_json[i]==my_json[my_json.length-1])   // If it is the last operation in the model then print/return the final result 
 						return temp; 
-						//console.log(temp);   // return the final result
+
 						
 					   break;
 					
