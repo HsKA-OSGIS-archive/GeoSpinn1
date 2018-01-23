@@ -37,25 +37,22 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 		
 		function change(){
 		$.getJSON('models/test_model1.json', function(data) {
-			//console.log(data);
+
 			mydata = data; 
-			//console.log(mydata.all_models[0].model_name);
+
 			var option;
 			option = document.createElement("option");
 			option.text = "Choose Model";
 			select_model.add(option);
 			for(var i=0 ; i<mydata.all_models.length ; i++){
-				
-				//console.log(mydata[i]);
+
 				option = document.createElement("option");
 				option.text = mydata.all_models[i].model_name;
 				select_model.add(option);
 			}
 			
 			select_model.onchange = function() {
-				//select_model.value;
 				readModel();
-				
 			}
 			function readModel(){
 				$("#input_parameters").empty();
@@ -65,14 +62,27 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 				while (input_para.firstChild) {
 					input_para.removeChild(input_para.firstChild);
 				}
-				//alert(select_model.value);
+
 				for (var v in mydata.all_models){
 					if (select_model.value == mydata.all_models[v].model_name){
-						//console.log(mydata.all_models[v]);
-						current = mydata.all_models[v]
+							
+						current = mydata.all_models[v];   //current model
+						
+						var count=1;
+						
 						for (var op in current.operations){
-							//console.log(current.operations[op].parameters.l1);
-							var lbls = document.createElement("label");
+							
+							if (current.operations[op].id != count){
+
+								alert("IDs of operations not assigned in order!");
+								$("#input_parameters").empty();
+								return;
+							}
+							
+							count = count+1;
+							
+							
+							var lbls = document.createElement("label");  //Labels to show name of each operation on the model dialog box
 							lbls.innerHTML = labels[current.operations[op].type];
 							input_para.appendChild(lbls);
 							var space = document.createElement("paragraph");
@@ -82,10 +92,13 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 							if (isNaN(current.operations[op].parameters.l1)){
 								select_lyr1[op] = document.createElement("select"); 
 								select_lyr1[op].id = current.operations[op].parameters.l1;
-								console.log(current);
+
 								var elem2 = document.createElement('label');
-								elem2.innerHTML = current.operations[op].parameters.l1;    
+								elem2.innerHTML = current.operations[op].parameters.l1;  
+								elem2.style.fontSize = "13px";
+								elem2.style.color = "grey";
 								input_para.appendChild(elem2);
+								$('elem2').after(" ");
 								
 								for (var l in layers){
 								
@@ -95,16 +108,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 									
 								}
 								var ht = select_lyr1[op];
-									/*select_lyr1[op].onchange = function() {
-											alert(ht);
-											ht.value;
-											alert("changed  " +ht.id);
-											
-											updateValues(ht.id,ht.value);
-											//readModel();
-									}*/
 								$(ht).change(function () { 
-									//alert(this.id);
 									updateValues(this.id , this.value);
 								});
 									
@@ -120,7 +124,9 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 									select_lyr2[op] = document.createElement("select"); 
 									select_lyr2[op].id = current.operations[op].parameters.l2;
 									var elem2 = document.createElement('label');
-									elem2.innerHTML = current.operations[op].parameters.l2;    
+									elem2.innerHTML = current.operations[op].parameters.l2;  
+									elem2.style.fontSize = "13px";
+									elem2.style.color = "grey";
 									input_para.appendChild(elem2);
 									var th = select_lyr2[op];
 									$(th).change(function () { 
@@ -149,11 +155,15 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 								if (current.operations[op].parameters.radius.user_defineable){
 									var buffer_label = document.createElement('label');
 									buffer_label.innerHTML = "Radius: "
+									buffer_label.style.fontSize = "13px";
+									buffer_label.style.color = "grey";
 									buffer_input = document.createElement("INPUT");
 									buffer_input.setAttribute("type" , "number");
 									buffer_input.setAttribute("value" , current.operations[op].parameters.radius.default_dist);
 									var unit_label = document.createElement('label');
 									unit_label.innerHTML = " km";
+									unit_label.style.fontSize = "13px";
+									unit_label.style.color = "grey";
 									input_para.appendChild(buffer_label);
 									input_para.appendChild(buffer_input);
 									input_para.appendChild(unit_label);
@@ -180,25 +190,18 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 
 			
 			function setValues(){
-				//console.log(in_layers);
+				
 				in_layers2 = in_layers;
 
-				var searchEles = input_para.children;
+				/*var searchEles = input_para.children;
 				for(var i = 0; i < searchEles.length; i++) {
 					//console.log(searchEles[i]);
 					//console.log(searchEles[i].options[searchEles[i].selectedIndex].value);
-				}
+				}*/
 				
 			}
 			function updateValues(id,value){
-				//console.log(in_layers);
 				in_layers2[id] = value;
-				var searchEles = input_para.children;
-				for(var i = 0; i < searchEles.length; i++) {
-					//console.log(searchEles[i]);
-					//console.log(searchEles[i].options[searchEles[i].selectedIndex].value);
-				}
-
 			}
 			
 			dw.initModel("model", $element, function(){
@@ -206,7 +209,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 				console.log(in_layers2);
 				console.log(current.operations);
 				current2 = $.extend( [], current.operations);
-				//current2 = current.operations;
+
 				console.log(current2);
 				layers = ow.getLayersFromDataStructure(ow.rootLayerCollection, [], 0);
 				layer_surveyed = {};
