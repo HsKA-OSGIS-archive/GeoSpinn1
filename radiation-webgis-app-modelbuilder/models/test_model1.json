@@ -1,6 +1,6 @@
 {
 	"all_models" : [
-					{	"model_name" : "test_model",
+					{	"model_name" : "buffer",
 						"operations" : [
 										{
 										 "type": "buffer",
@@ -30,7 +30,7 @@
 										}
 									]
 					},
-					{	"model_name" : "my_model",
+					{	"model_name" : "buffer_union_difference",
 						"operations" : [
 										{
 										 "type": "buffer",
