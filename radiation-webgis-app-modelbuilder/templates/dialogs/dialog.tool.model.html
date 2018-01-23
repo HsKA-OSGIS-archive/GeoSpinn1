@@ -6,13 +6,15 @@
 
     <ul class="nav nav-tabs">
 	<li><h4 style="">Model</h4></li>
-	<li class="pull-right"><a data-toggle="tab" href="#tab_help">Help</a></li>
-	<li class="active pull-right"><a data-toggle="tab" href="#tab_options">Options</a></li>
+    <li class="pull-right"><a data-toggle="tab" href="#model_tab_JSON">JSON eg.</a></li>
+    <li class="pull-right"><a data-toggle="tab" href="#model_tab_help">Help</a></li>
+	<li class="active pull-right"><a data-toggle="tab" href="#model_tab_options">Options</a></li>
     </ul>
+
 
     <div class="tab-content">
 
-	<div role="tabpanel" id="tab_options" class="tab-pane fade in active">
+	<div role="tabpanel" id="model_tab_options" class="tab-pane fade in active">
 
 	    <br>
 
@@ -24,11 +26,11 @@
 	    <div class="form-field form-group">
             
             <div >
-				<label for="model_layer_title">Select Model</label>
+				<label for="model_layer_title">Choose Model</label>
 				<select id="models" name="models" class="form-control">
 
 				</select>
-
+				
             </div>
 
 	    </div>
@@ -39,34 +41,73 @@
 		</div>
 
 	    <div class="form-field form-group">
-		
-		<!--<label for="buffer_layer_style">Style</label>
-		<div class="form-inline well well-sm" style="">
-		    <div class="form-group col-lg-3"  style="margin-top: 2px;">
-			<b>Fill:</b> <input id="buffer_layer_style_fill" name="buffer_layer_style_fill" type="text" class="form-control" placeholder="">
-		    </div>
-		    <div class="form-group col-lg-5" style="margin-top: 2px;">
-			<b>Outline:</b> <input  id="buffer_layer_style_outline" name="buffer_layer_style_outline" type="text" class="form-control" placeholder="">
-		    </div>
-		     <div class="form-group pull-right">
-			<b>Outline width:</b> <input id="buffer_layer_style_outline_width" name="buffer_layer_style_outline_width" value="1" style="width: 60px;" type="number" class="form-control" placeholder="">
-		    </div>
-		    <div class="clearfix"></div>
-		</div>
-
-		<div style="display: none; margin-top: 5px; padding: 7.5px;" class="alert alert-danger" role="alert"> </div>
-		
-	    </div>-->
-
+	</div> 
+        
 
 	</div>
+    
 
-	<!--<div role="tabpanel" id="tab_help" class="tab-pane fade in">
-	    <h5><b>Creates a new layer with the Buffer polygons.</b></h5>
-						The user may select points, polygons or lines.
-						Also, the user must fill in required fields: Layer name, layer title, Details (Buffer distance in milles or kilometers) and if it like to select the layer.
-	</div>-->
+	<div role="tabpanel" id="model_tab_help" class="tab-pane fade in">
+	    <h5><b>Runs a model </b></h5>
+						Available features are buffer, intersect, difference, combine and union.<br>
+                        Need to select the model, based on selection possible layers will appear. After choosing the layer/layers user can hit a create button to get the model.<br>
+                        Distance for the buffer can be given by user otherwise model will create using default distance. 
+        
+                        
+        <h5><b>User guidelines to create JSON file :</b></h5>
+           
+             1) Type of functionalities/operations must be a string's and always small letters with correct spelling eg. buffer, intersect...<br>
+             2) The id must be an integer eg. 1, 2.<br>
+             3) Id's of functionalities/operations must be in cronological order.<br>
+             4) If the layer taking input using from the previous operation, thus the value of the layer should be integer of that operation <br>
+             5)The operation must take input from preperformed or preprocessed operations <br>
+            <h6><b>parameters :</b></h6>
+                1) Layer names must be string's <br> 
+                2) Buffer distance must be integer and can not be a negetive value <br>
+           
+       
+	</div>
+        <div role="tabpanel" id="model_tab_JSON" class="tab-pane fade in">
+        <h5><b>Json file example</b></h5>
+        <pre>
+        {	"model_name" : "my_model",
+            "operations" : [
+                            {
+                             "type": "buffer",
+                             "id"  : 1,
+                             "parameters" :{
+                                  "l1": "input_layer1",
+                                  "radius": {
+                                    "default_dist" : 50,
+                                    "user_defineable" : false,
+                                    "units" : "kilometres",
+                                    "dissolve" : true
+                                  }
+                             }
+                            }, 
+                            {
+                             "type": "intersect",
+                             "id"  : 2,
+                             "parameters" : {
+                              "l1": 1,
+                              "l2": "input_layer2"
+                             }
+                            },
+                            {
+                             "type": "difference",
+                             "id"  : 3,
+                             "parameters" : {
+                              "l1": "input_layer3",
+                              "l2": 1 
+                             }
+                            }
+                        ]
+        }
+        </pre>
+        
+        </div>
 	
-    </div>   
+    </div>
+
  
 </form>
