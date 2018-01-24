@@ -33,6 +33,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 		var mydata;
 		var in_layers = {};
 		var in_layers2 = {};
+		
 		var labels = {"buffer":"BUFFER", "intersect" : "INTERSECT" , "union":"UNION" , "difference":"DIFFERENCE", "combine":"COMBINE"};
 		
 		function change(){
@@ -70,18 +71,16 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 						
 						var count=1;
 						
+						var id_checker = [];   // Stores Ids to validate later that ids of all operations are unique
+						var id_find = []; 
 						for (var op in current.operations){
 							
-							if (current.operations[op].id != count){
-
-								alert("IDs of operations not assigned in order!");
-								$("#input_parameters").empty();
-								return;
-							}
+							id_checker.push(current.operations[op].id);
+						}
+						for (var op in current.operations){
 							
-							count = count+1;
-							
-							
+							  
+							id_find.push(current.operations[op].id);
 							var lbls = document.createElement("label");  //Labels to show name of each operation on the model dialog box
 							lbls.innerHTML = labels[current.operations[op].type];
 							input_para.appendChild(lbls);
@@ -118,6 +117,46 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 								
 								
 							}
+							else{
+								var check=0;
+
+								for (var i in id_checker){
+									
+									if (id_checker[i] == current.operations[op].id){
+										check=check+1;
+										
+									}
+									if (check==2){
+											$("#input_parameters").empty();
+											select_model.value = "Choose Model";
+											console.log(dw.tools);
+											alert("Id not Unique!");
+											in_layers2 = undefined;
+											return;
+											break;
+											
+									}
+									
+								}
+								var found=false;
+								for (var i=0 ; i<id_find.length-1 ; i++){
+
+									if (current.operations[op].parameters.l1 == id_find[i]){
+										found = true;
+										break;
+									}
+								}
+								if (!found){
+									alert("The operation "+current.operations[op].type+" is taking a result from another operation which does not exist or processed yet!");
+									$("#input_parameters").empty();
+									select_model.value = "Choose Model";
+									in_layers2 = undefined;
+									break;
+									return;
+									
+								}
+								
+							}
 							//console.log(current.operations[0].parameters.l1);
 							if (current.operations[op].parameters.l2){
 								if (isNaN(current.operations[op].parameters.l2)){
@@ -148,6 +187,43 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 									//console.log(current.operations[0].parameters.l2);
 
 									
+								}
+								else{
+									var check=0;
+
+									for (var i in id_checker){
+										
+										if (id_checker[i] == current.operations[op].id){
+											check=check+1;
+											console.log(id_checker);
+										}
+										if (check==2){
+												alert("Id not Unique!");
+												$("#input_parameters").empty();
+												select_model.value = "Choose Model";
+												in_layers2 = undefined;
+												return;
+												break;
+												
+										}
+										
+									}
+									var found=false;
+									for (var i=0 ; i<id_find.length-1 ; i++){
+										if (current.operations[op].parameters.l2 == id_find[i]){
+											found = true;
+											break;
+										}
+									}
+									if (!found){
+										alert("The operation "+current.operations[op].type+" is taking a result from another operation which does not exist or processed yet!");
+										$("#input_parameters").empty();
+										select_model.value = "Choose Model";
+										in_layers2 = undefined;
+										break;
+										return;
+									
+									}
 								}
 							}
 							
@@ -252,9 +328,15 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 					style: model_style
 				});
 				
+				if (in_layers2 != undefined){
+					var model = turf_model.model(current2, in_layers2);
+					console.log(model);
+				}
+				else{
+					console.log(in_layers2);
+					alert("No result returned;");
+				}
 				
-				var model = turf_model.model(current2, in_layers2);
-				console.log(model);
 				ow.addGeoJsonToSource(model , model_layer);
 
 				ow.rootGroup.getLayers().push(model_layer);
