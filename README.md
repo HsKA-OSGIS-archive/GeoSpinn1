@@ -13,13 +13,12 @@
 	of turf.js. The web application makes use of a dataset consisting of two layers: 
 	administrative areas of Baden-Wurttemberg and points with radiation. <br></b> 
 
- <b>Developer of Model Builder Extension for Turf.JS, the Team Members are: </b>
+ <b>Developer of Model Builder Extension for Turf.JS, the Team Members are: 
         <li>1. Chaitanya Krishna Chirumamilla</li>
         <li>2. Keneuoe Anne Maliehe</li>
         <li>3. Shahab Ahmed</li>
         <li>4. Belayet Mohammad Fuad Amin</li>
-        
-         <br>
+         <br></b>
 </ul>
 <h1>Example data:</h1>
 Two example datasets were used: 
