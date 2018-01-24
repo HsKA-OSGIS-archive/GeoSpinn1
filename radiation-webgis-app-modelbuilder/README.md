@@ -11,15 +11,15 @@
 	The application is based on openlayers 3 and implements the model functionality using 
 	a combination of the following functions: buffer, intersect, union, difference, combine 
 	of turf.js. The web application makes use of a dataset consisting of two layers: 
-	administrative areas of Baden-Wurttemberg and points with radiation.</b>
-	 <ul>
- <i>Developer of Model Builder Extension for Turf.JS, the Team Members are: </i>
+	administrative areas of Baden-Wurttemberg and points with radiation.</b> <br>
+	 
+ <b>Developer of Model Builder Extension for Turf.JS, the Team Members are: </i> <br>
         <li>1. Chaitanya Krishna Chirumamilla</li>
         <li>2. Shahab Ahmed</li>
         <li>3. Belayet Mohammad Fuad Amin</li>
         <li>4. Keneuoe Anne Maliehe</li>
          <br>
-      </ul>
+      
 </ul>
 <h1>Example data:</h1>
 Two example datasets were used: 
