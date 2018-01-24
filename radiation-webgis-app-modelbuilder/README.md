@@ -1,4 +1,4 @@
-# Model Builder Extension for Turf.js
+# Demonstration of Model Builder Extension for Turf.js
 
 <h1>About us:</h1>
 <ul>
