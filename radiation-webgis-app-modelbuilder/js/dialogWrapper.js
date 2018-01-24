@@ -112,7 +112,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 	    */
 	    self.tools[name].form.dialog({
 		autoOpen: false,
-		height: 450,
+		//height: 400,
 		width: 600,
 		modal: true,
 		create: function () {
@@ -170,6 +170,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 		    click: function() {
 
 			if(self.validateForm(self.tools[name])){
+				
 			    try{
 				operation();
 			    } catch (e){
@@ -211,43 +212,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 	    self.tools[name].errors = {};
 	    self.ow = ow;
 
-	   /* setInterval(function(){
-		
-		selected = ow.selectedFeaturesCollection;
-		
-		if(selected.getLength() < geom_settings.min || (selected.getLength() > geom_settings.max && geom_settings.max !== null)){
-		    
-		    element.find(".tool").prop('disabled', true);
-		} else {
-		
-		    if(geom_settings.accept_only.length > 0){
-			selected.forEach(function(feature, index, array) {
-			    type = feature.getGeometry().getType();
-			    if($.inArray(type, geom_settings.accept_only) === -1){
-				//$("#" + name + "_button_create").button('disable');
-				element.find(".tool").prop('disabled', true);
-				 
-			    } else {
-				//$("#" + name + "_button_create").button('enable');
-				element.find(".tool").prop('disabled', false);
-				
-			    }
-			});
-		    }
-		    
-		}
-		
-	    }, 1000);*/
-	    /*
-	    		setInterval(function(){
-			    console.log(self.validateForm(self.tools[name]));
-			    if(self.validateForm(self.tools[name])){
-				$("#" + name + "_button_create").prop('disabled', false);
-			    } else {
-				$("#" + name + "_button_create").prop('disabled', true);
-			    };
-			}, 3000);
-	    */
+
 	    self.tools[name].form.dialog({
 		autoOpen: false,
 		height: 450,
@@ -291,7 +256,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 			}, 3000);
 		},
 		buttons: [{
-		    text: "Create",
+		    text: "Run",
 		    id: name + "_button_create",
 		    //disabled: true,
 		    create: function(event, ui){
@@ -306,7 +271,8 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 			}, 3000);
 		    },
 		    click: function() {
-				operation();
+				//operation();
+				console.log(self.tools[name]);
 			if(self.validateForm(self.tools[name])){
 			    try{
 				operation();
