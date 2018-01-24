@@ -66,7 +66,7 @@ In case of: www.yourdomain.xyz/
 </head>
 ```
 Moreover User of this application can also download the radiation-webgis-app-modelbuilder file and use python to run it - 
-'python -m SimpleHTTPServer 8000' from python sell.
+`python -m SimpleHTTPServer 8000` from python sell.
 <h1>Functionalities:</h1>
 <ul>
   <li>1. Map window: contains the base map and the vector layers</li> <br>
