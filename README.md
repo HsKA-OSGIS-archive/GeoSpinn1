@@ -1,4 +1,4 @@
-# Client-side spatial analyser
+# Model Builder Extension for Turf.js
 
 <h1>About us:</h1>
 <ul>

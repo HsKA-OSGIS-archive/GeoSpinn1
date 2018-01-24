@@ -37,7 +37,7 @@ define(["jqueryui", "turf_model", "openlayers", "spectrum"], function(jqueryui, 
 		var labels = {"buffer":"BUFFER", "intersect" : "INTERSECT" , "union":"UNION" , "difference":"DIFFERENCE", "combine":"COMBINE"};
 		
 		function change(){
-		$.getJSON('models/test_model1.json', function(data) {
+		$.getJSON('models/test_model2.json', function(data) {
 
 			mydata = data; 
 
