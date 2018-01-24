@@ -112,7 +112,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 	    */
 	    self.tools[name].form.dialog({
 		autoOpen: false,
-		//height: 400,
+		height: 450,
 		width: 600,
 		modal: true,
 		create: function () {
@@ -250,7 +250,7 @@ define(["jqueryui", "bootstrap"], function(ui, bs){
 	    */
 	    self.tools[name].form.dialog({
 		autoOpen: false,
-		//height: 400,
+		height: 450,
 		width: 600,
 		modal: true,
 		create: function () {
